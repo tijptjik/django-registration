@@ -2,8 +2,6 @@
 Views which allow users to create and activate accounts.
 
 """
-
-
 from django.shortcuts import redirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -11,6 +9,9 @@ from django.template import RequestContext
 from registration.backends import get_backend
 
 
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
 def activate(request, backend,
              template_name='registration/activate.html',
              success_url=None, extra_context=None, **kwargs):
@@ -91,11 +92,12 @@ def activate(request, backend,
                               kwargs,
                               context_instance=context)
 
-
+@csrf_exempt
 def register(request, backend, success_url=None, form_class=None,
              disallowed_url='registration_disallowed',
              template_name='registration/registration_form.html',
-             extra_context=None):
+             extra_context=None,
+             deferred=False):
     """
     Allow a new user to register an account.
 
@@ -185,9 +187,12 @@ def register(request, backend, success_url=None, form_class=None,
         form = form_class(data=request.POST, files=request.FILES)
         if form.is_valid():
             new_user = backend.register(request, **form.cleaned_data)
-            if success_url is None:
+            
+            if not deferred and success_url is None:
                 to, args, kwargs = backend.post_registration_redirect(request, new_user)
                 return redirect(to, *args, **kwargs)
+            elif deferred:
+                return new_user
             else:
                 return redirect(success_url)
     else:
