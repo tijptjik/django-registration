@@ -60,7 +60,7 @@ class RegistrationManager(models.Manager):
         return False
     
     def create_inactive_user(self, username, email, password,
-                             site, send_email=True):
+                             site, activated=False, send_email=True):
         """
         Create a new, inactive ``User``, generate a
         ``RegistrationProfile`` and email its activation key to the
@@ -71,7 +71,7 @@ class RegistrationManager(models.Manager):
         
         """
         new_user = User.objects.create_user(username, email, password)
-        new_user.is_active = False
+        new_user.is_active = activated
         new_user.save()
 
         registration_profile = self.create_profile(new_user)
