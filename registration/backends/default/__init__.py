@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.contrib.sites.models import RequestSite
 from django.contrib.sites.models import Site
 
@@ -71,19 +72,25 @@ class DefaultBackend(object):
 
         """
         username, email, password = kwargs['username'], kwargs['email'], kwargs['password1']
-        if Site._meta.installed:
-            site = Site.objects.get_current()
-        else:
-            site = RequestSite(request)
-        new_user = RegistrationProfile.objects.create_inactive_user(username, email,
-                                                                    password, site,
-                                                                    activated=True,
-                                                                    send_email=False)
-        signals.user_registered.send(sender=self.__class__,
-                                     user=new_user,
-                                     request=request)
+        
+        try:
+            User.objects.get(email__iexact=email)
+            return User.objects.get(email__iexact=email)
+        except User.DoesNotExist:
+            if Site._meta.installed:
+                site = Site.objects.get_current()
+            else:
+                site = RequestSite(request)
+            new_user = RegistrationProfile.objects.create_inactive_user(username, email,
+                                                                        password, site,
+                                                                        activated=True,
+                                                                        send_email=False)
+            signals.user_registered.send(sender=self.__class__,
+                                         user=new_user,
+                                         request=request)
 
-        return new_user
+            return new_user
+
 
     def activate(self, request, activation_key):
         """
