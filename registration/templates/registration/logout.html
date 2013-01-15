@@ -1,21 +1,27 @@
-{% extends "registration/base_registration.html" %}
+{% extends "base.html" %}
 
-
-{% block title %}Logged out{% endblock %}
-{% block body_class %}{{ block.super }} logout{% endblock %}
-
-
-{% block content_title %}
-  <h2>Logged out</h2>
-  <p>You have been logged out.</p>
-{% endblock %}
-
-
+{% block page_class %}Logout Page{% endblock %}
 {% block content %}
-  <form action="{% url django.contrib.auth.views.login %}" method="post" class="login_form">{% csrf_token %}
-    <p><label for="id_username">Username</label> <input type="text" name="username" id="id_username"></p>
-    <p><label for="id_password">Password</label> <input type="password" name="password" id="id_password"></p>
-    <p class="submit"><button type="submit" name="submit" value="Login">Log in</button></p>
-    <input type="hidden" name="next" value="{% if next %}{{ next }}{% else %}/{% endif %}">
-  </form>
+<div class="hero-unit">          
+  <div id="loginBox" class="container">
+  <div class="content">
+      <div class="row">
+        <div class="login-form">
+          <h1>Come again!</h1>
+          <form action="/accounts/login/" method="post">{% csrf_token %}
+            <fieldset>
+              <div class="clearfix">
+                <input type="text" name="username" value="" placeholder="E-mail">
+              </div>
+              <div class="clearfix">
+                <input type="password" name="password" value="" placeholder="Password">
+              </div>
+              {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+              <input type="submit" name="submit" value="Submit" class="my-btn btn-large">
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </div>
+    </div>
 {% endblock %}

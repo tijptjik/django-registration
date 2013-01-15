@@ -14,7 +14,9 @@ from django.utils.translation import ugettext_lazy as _
 # in the HTML. Your mileage may vary. If/when Django ticket #3515
 # lands in trunk, this will no longer be necessary.
 attrs_dict = {'class': 'required'}
-
+institution_attrs_dict = {'validate': 'required'}
+first_name_attrs_dict = {'validate': 'required'}
+last_name_attrs_dict = {'validate': 'required'}
 
 class RegistrationForm(forms.Form):
     """
@@ -70,14 +72,27 @@ class RegistrationForm(forms.Form):
 
 class RegistrationFormTermsOfService(RegistrationForm):
     """
+    Subclass of ``RegistrationForm`` which adds a required institutional
+    affiliation and requires contact person to provide first & last name
+    """
+
+class RegistrationFormInstitutional(RegistrationForm):
+    """
     Subclass of ``RegistrationForm`` which adds a required checkbox
     for agreeing to a site's Terms of Service.
-    
     """
-    tos = forms.BooleanField(widget=forms.CheckboxInput(attrs=attrs_dict),
-                             label=_(u'I have read and agree to the Terms of Service'),
-                             error_messages={'required': _("You must agree to the terms to register")})
-
+    institution = forms.CharField(
+        widget=forms.TextInput(attrs=dict(institution_attrs_dict, maxlength=256)),
+        label="Institution"
+    )
+    first_name = forms.CharField(
+        widget=forms.TextInput(attrs=dict(first_name_attrs_dict, maxlength=256)),
+        label="First Name"
+    )
+    last_name = forms.CharField(
+        widget=forms.TextInput(attrs=dict(last_name_attrs_dict, maxlength=256)),
+        label="Last Name"
+    )
 
 class RegistrationFormUniqueEmail(RegistrationForm):
     """
