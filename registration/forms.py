@@ -81,10 +81,6 @@ class RegistrationFormInstitutional(RegistrationForm):
     Subclass of ``RegistrationForm`` which adds a required checkbox
     for agreeing to a site's Terms of Service.
     """
-    institution = forms.CharField(
-        widget=forms.TextInput(attrs=dict(institution_attrs_dict, maxlength=256)),
-        label="Institution"
-    )
     first_name = forms.CharField(
         widget=forms.TextInput(attrs=dict(first_name_attrs_dict, maxlength=256)),
         label="First Name"
@@ -92,6 +88,10 @@ class RegistrationFormInstitutional(RegistrationForm):
     last_name = forms.CharField(
         widget=forms.TextInput(attrs=dict(last_name_attrs_dict, maxlength=256)),
         label="Last Name"
+    )
+    institution = forms.CharField(
+        widget=forms.TextInput(attrs=dict(institution_attrs_dict, maxlength=256)),
+        label="Institution"
     )
 
 class RegistrationFormUniqueEmail(RegistrationForm):

@@ -184,16 +184,29 @@ def register(request, backend, success_url=None, form_class=None,
         form_class = backend.get_form_class(request)
 
     if request.method == 'POST':
+        print 'gotcha'
         form = form_class(data=request.POST, files=request.FILES)
         if form.is_valid():
+            print 'valid'
+            print form
+            print 'Request\n'
+            print request.POST
+            print 'Backend\n'
+            print backend
             new_user = backend.register(request, **form.cleaned_data)
             if not deferred and success_url is None:
+                print 'redirect'
                 to, args, kwargs = backend.post_registration_redirect(request, new_user)
                 return redirect(to, *args, **kwargs)
             elif deferred:
+                print 'deferred'
                 return new_user
             else:
+                print 'success'
                 return redirect(success_url)
+        else:
+            print form
+            print 'invalid'
     else:
         form = form_class()
     

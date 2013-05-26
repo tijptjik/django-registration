@@ -10,7 +10,17 @@ from mycroft.base.models import Institution
 
 class InstitutionalBackend(object):
     def register(self, request, **kwargs):
-        institution, first_name, last_name, username, email, password = kwargs['institution'], kwargs['first_name'], kwargs['last_name'], kwargs['username'], kwargs['email'], kwargs['password1']
+        print request.POST
+        print
+        print request.POST['institution']
+        print
+        print kwargs
+        institution = request.POST['institution']
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        username = kwargs['username']
+        email = kwargs['email']
+        password = kwargs['password1']
         
         try:
             User.objects.get(email__iexact=email)
